@@ -12,6 +12,8 @@ export default function App() {
   const [display, setDisplay] = useState('00:00:00');
   const [botaoText, setBotaoText] = useState('Iniciar');
   const [lastTime, setLastTime] = useState(null);
+  const [temposSalvos, setTemposSalvos] = useState([]);
+
 
   function start() {
     if (timer !== null) {
@@ -36,7 +38,7 @@ export default function App() {
           + ':' + (ss < 10 ? '0' : '') + ss;
 
         setDisplay(format);
-      }, 10);
+      }, 100);
 
       setBotaoText('Parar');
     }
@@ -59,7 +61,9 @@ export default function App() {
     hh = 0;
 
 
-    setLastTime(display);
+    const tempoAtual = display;
+        setTemposSalvos([...temposSalvos, tempoAtual]);
+
 
     setDisplay('00:00:00');
     setBotaoText('Iniciar');
@@ -86,27 +90,21 @@ export default function App() {
         </TouchableOpacity>
 
         <TouchableOpacity 
-        style={[styles.button]} 
+        style={[styles.button,{ opacity: timer !== null ? 0.5 : 1 }]} 
         onPress={clear}>
+
         <Text style={styles.buttonText}>Limpar</Text>
         </TouchableOpacity>
 
        
       </View>
 
-      {/* <View style={styles.last}>
-        <Text style={styles.last}>Ultimo tempo salvo:</Text>
-        {timesSave.map((tempo, index) => (
-          <Text key={index} style={[styles.historic, styles.historicItem]}>{`Tempo ${index + 1}: ${tempo}`}</Text>
-        ))}
-      </View> */}
-
-      <View style={styles.last}>
-        <Text style={styles.last}> {lastTime ? 'Ultimo tempo:' + lastTime: ''}
-
-        </Text>
-
-      </View>
+     <View style={styles.historic}>
+                <Text style={styles.historic}>Histórico:</Text>
+                {temposSalvos.map((tempo, index) => (
+                    <Text key={index} style={[styles.historic, styles.historicItem]}>{`Tempo ${index + 1}: ${tempo}`}</Text>
+                ))}
+            </View>
 
 
 
@@ -118,7 +116,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '',
+    backgroundColor: '#dec9ee',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -137,7 +135,7 @@ const styles = StyleSheet.create({
     marginTop: 45,
   },
   button:{
-    backgroundColor: '#b8a6d8',
+    backgroundColor: '#a58ece',
     borderRadius: 100,
     paddingTop: 10,
     paddingVertical: 10,
@@ -148,7 +146,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   buttonText:{
-    
+    color: 'white',
+    alignSelf: 'center',
+    fontWeight: "bold",
   },
  
   last:{
@@ -157,11 +157,12 @@ const styles = StyleSheet.create({
   },
 
   historic:{
-    fontSize: 25,
+    fontSize: 18,
     marginTop: 2,
     paddingHorizontal: 25,
     textAlign:'center',
-    color:'white',
+    color:'#402c63',
+    fontWeight: "italic"
   },
   historicItem: {
       fontSize: 20,
