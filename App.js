@@ -12,7 +12,7 @@ export default function App() {
   const [display, setDisplay] = useState('00:00:00');
   const [botaoText, setBotaoText] = useState('Iniciar');
   const [lastTime, setLastTime] = useState(null);
-  const [temposSalvos, setTemposSalvos] = useState([]);
+  const [formatEstado, setFormatState] = useState([]);
 
 
   function start() {
@@ -38,6 +38,7 @@ export default function App() {
           + ':' + (ss < 10 ? '0' : '') + ss;
 
         setDisplay(format);
+       
       }, 100);
 
       setBotaoText('Parar');
@@ -45,29 +46,13 @@ export default function App() {
   }
 
   function clear() {
-    if (timer !== null) {
       clearInterval(timer);
       timer = null;
-      setBotaoText('Iniciar')
-    }
-
-    if (display !== "00:00:00") {
-      setLastTime([display, ...lastTime]);
-    }
-
-    setDisplay("00:00:00");
-    ss = 0;
-    mm = 0;
-    hh = 0;
-
-
-    const tempoAtual = display;
-        setTemposSalvos([...temposSalvos, tempoAtual]);
-
-
-    setDisplay('00:00:00');
-    setBotaoText('Iniciar');
-    
+      ss = 0;
+      mm = 0;
+      hh = 0;
+      setLastTime(display)
+      setDisplay('00:00:00')
   }
 
 
@@ -93,7 +78,7 @@ export default function App() {
         style={[styles.button,{ opacity: timer !== null ? 0.5 : 1 }]} 
         onPress={clear}>
 
-        <Text style={styles.buttonText}>Limpar</Text>
+        <Text style={styles.buttonText}>Reiniciar</Text>
         </TouchableOpacity>
 
        
@@ -101,9 +86,7 @@ export default function App() {
 
      <View style={styles.historic}>
                 <Text style={styles.historic}>Histórico:</Text>
-                {temposSalvos.map((tempo, index) => (
-                    <Text key={index} style={[styles.historic, styles.historicItem]}>{`Tempo ${index + 1}: ${tempo}`}</Text>
-                ))}
+               <Text style={styles.historic}>{lastTime}</Text>
             </View>
 
 
